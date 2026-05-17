@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoVision — Pollution Detection System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="stylepage.css" />
+</head>
+<body>
+  <div class="noise-overlay"></div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="18" stroke="var(--accent)" stroke-width="2"/>
+          <path d="M10 26 Q15 14 20 20 Q25 26 30 14" stroke="var(--accent)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <circle cx="20" cy="20" r="3" fill="var(--accent)"/>
+        </svg>
+      </div>
+      <span class="logo-text">Eco<span>Vision</span></span>
+    </div>
+    <nav>
+      <span class="nav-tag active" data-tab="dashboard">Dashboard</span>
+      <span class="nav-tag" data-tab="simulate">Simulate</span>
+      <span class="nav-tag" data-tab="alerts">Alerts <span class="badge" id="alertBadge">0</span></span>
+      <span class="nav-tag" data-tab="about">About</span>
+    </nav>
+    <div class="status-pill">
+      <span class="pulse-dot"></span> LIVE MONITORING
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- ===== DASHBOARD TAB ===== -->
+    <section class="tab active" id="tab-dashboard">
+      <div class="section-header">
+        <h1>Environmental <br/><em>Pollution Monitor</em></h1>
+        <p class="subtitle">Real-time detection across 4 pollution vectors</p>
+      </div>
+
+      <div class="cards-grid">
+
+        <!-- NOISE -->
+        <div class="card" id="card-noise" data-type="noise">
+          <div class="card-top">
+            <div class="card-icon noise-icon">
+              <svg viewBox="0 0 48 48" fill="none"><path d="M8 32 Q14 16 20 24 Q26 32 32 16 Q38 8 44 20" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/><line x1="8" y1="40" x2="44" y2="40" stroke="currentColor" stroke-width="1.5" opacity="0.3"/></svg>
+            </div>
+            <div>
+              <h3>Noise Pollution</h3>
+              <span class="sensor-loc">📍 Urban Zone A</span>
+            </div>
+            <div class="status-badge safe" id="noiseStatus">SAFE</div>
+          </div>
+          <div class="meter-wrap">
+            <div class="meter-label">
+              <span>Sound Level</span>
+              <span class="meter-value" id="noiseVal">42 dB</span>
+            </div>
+            <div class="meter-track">
+              <div class="meter-fill noise-fill" id="noiseMeter" style="width:42%"></div>
+            </div>
+            <div class="meter-ticks"><span>0</span><span>50</span><span>100</span><span>150+ dB</span></div>
+          </div>
+          <div class="card-stats">
+            <div class="stat"><span class="stat-label">Peak Today</span><span class="stat-val" id="noisePeak">—</span></div>
+            <div class="stat"><span class="stat-label">Threshold</span><span class="stat-val">85 dB</span></div>
+            <div class="stat"><span class="stat-label">Risk</span><span class="stat-val risk" id="noiseRisk">Low</span></div>
+          </div>
+          <canvas class="mini-chart" id="noiseChart" width="320" height="60"></canvas>
+        </div>
+
+        <!-- AIR -->
+        <div class="card" id="card-air" data-type="air">
+          <div class="card-top">
+            <div class="card-icon air-icon">
+              <svg viewBox="0 0 48 48" fill="none"><path d="M6 24 Q14 12 24 24 Q34 36 42 24" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="24" cy="24" r="6" stroke="currentColor" stroke-width="2"/><path d="M24 10 L24 6M24 38 L24 42M10 24 L6 24M42 24 L38 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <div>
+              <h3>Air Pollution</h3>
+              <span class="sensor-loc">📍 Industrial Corridor</span>
+            </div>
+            <div class="status-badge moderate" id="airStatus">MODERATE</div>
+          </div>
+          <div class="meter-wrap">
+            <div class="meter-label">
+              <span>AQI Level</span>
+              <span class="meter-value" id="airVal">78 AQI</span>
+            </div>
+            <div class="meter-track">
+              <div class="meter-fill air-fill" id="airMeter" style="width:31%"></div>
+            </div>
+            <div class="meter-ticks"><span>0</span><span>50</span><span>200</span><span>300+</span></div>
+          </div>
+          <div class="card-stats">
+            <div class="stat"><span class="stat-label">PM2.5</span><span class="stat-val" id="airPM">—</span></div>
+            <div class="stat"><span class="stat-label">Threshold</span><span class="stat-val">100 AQI</span></div>
+            <div class="stat"><span class="stat-label">Risk</span><span class="stat-val risk" id="airRisk">Medium</span></div>
+          </div>
+          <canvas class="mini-chart" id="airChart" width="320" height="60"></canvas>
+        </div>
+
+        <!-- DUMP WASTE -->
+        <div class="card" id="card-waste" data-type="waste">
+          <div class="card-top">
+            <div class="card-icon waste-icon">
+              <svg viewBox="0 0 48 48" fill="none"><rect x="10" y="18" width="28" height="22" rx="3" stroke="currentColor" stroke-width="2.5"/><path d="M6 18 L42 18M16 18 L16 12 Q16 8 20 8 L28 8 Q32 8 32 12 L32 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="20" y1="24" x2="20" y2="34" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="28" y1="24" x2="28" y2="34" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <div>
+              <h3>Dump Waste</h3>
+              <span class="sensor-loc">📍 East Landfill</span>
+            </div>
+            <div class="status-badge danger" id="wasteStatus">DANGER</div>
+          </div>
+          <div class="meter-wrap">
+            <div class="meter-label">
+              <span>Fill Level</span>
+              <span class="meter-value" id="wasteVal">87%</span>
+            </div>
+            <div class="meter-track">
+              <div class="meter-fill waste-fill" id="wasteMeter" style="width:87%"></div>
+            </div>
+            <div class="meter-ticks"><span>0%</span><span>25%</span><span>75%</span><span>100%</span></div>
+          </div>
+          <div class="card-stats">
+            <div class="stat"><span class="stat-label">Methane</span><span class="stat-val" id="wasteMethane">—</span></div>
+            <div class="stat"><span class="stat-label">Threshold</span><span class="stat-val">80%</span></div>
+            <div class="stat"><span class="stat-label">Risk</span><span class="stat-val risk" id="wasteRisk">High</span></div>
+          </div>
+          <canvas class="mini-chart" id="wasteChart" width="320" height="60"></canvas>
+        </div>
+
+        <!-- WATER -->
+        <div class="card" id="card-water" data-type="water">
+          <div class="card-top">
+            <div class="card-icon water-icon">
+              <svg viewBox="0 0 48 48" fill="none"><path d="M24 6 Q36 20 36 28 A12 12 0 0 1 12 28 Q12 20 24 6Z" stroke="currentColor" stroke-width="2.5" fill="none"/><path d="M18 30 Q22 26 26 30" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <div>
+              <h3>Water Pollution</h3>
+              <span class="sensor-loc">📍 River Basin South</span>
+            </div>
+            <div class="status-badge moderate" id="waterStatus">MODERATE</div>
+          </div>
+          <div class="meter-wrap">
+            <div class="meter-label">
+              <span>Contamination</span>
+              <span class="meter-value" id="waterVal">56 pH</span>
+            </div>
+            <div class="meter-track">
+              <div class="meter-fill water-fill" id="waterMeter" style="width:56%"></div>
+            </div>
+            <div class="meter-ticks"><span>0</span><span>3</span><span>7</span><span>14 pH</span></div>
+          </div>
+          <div class="card-stats">
+            <div class="stat"><span class="stat-label">Turbidity</span><span class="stat-val" id="waterTurb">—</span></div>
+            <div class="stat"><span class="stat-label">Threshold</span><span class="stat-val">pH 6.5–8.5</span></div>
+            <div class="stat"><span class="stat-label">Risk</span><span class="stat-val risk" id="waterRisk">Medium</span></div>
+          </div>
+          <canvas class="mini-chart" id="waterChart" width="320" height="60"></canvas>
+        </div>
+
+      </div>
+
+      <!-- SUMMARY ROW -->
+      <div class="summary-row">
+        <div class="summary-box">
+          <span class="summary-num" id="totalAlerts">1</span>
+          <span class="summary-label">Active Alerts</span>
+        </div>
+        <div class="summary-box">
+          <span class="summary-num" id="safeCount">2</span>
+          <span class="summary-label">Safe Zones</span>
+        </div>
+        <div class="summary-box">
+          <span class="summary-num" id="samplesCount">0</span>
+          <span class="summary-label">Samples Taken</span>
+        </div>
+        <div class="summary-box">
+          <span class="summary-num">4</span>
+          <span class="summary-label">Sensors Online</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SIMULATE TAB ===== -->
+    <section class="tab" id="tab-simulate">
+      <div class="section-header">
+        <h1>Simulate <em>Pollution Events</em></h1>
+        <p class="subtitle">Manually inject sensor readings to test alert thresholds</p>
+      </div>
+      <div class="sim-grid">
+
+        <div class="sim-card">
+          <h4>🔊 Noise Level <span class="unit">dB</span></h4>
+          <input type="range" min="0" max="150" value="42" id="simNoise" class="slider noise-slider" />
+          <div class="slider-val" id="simNoiseVal">42 dB</div>
+          <p class="sim-hint">Normal: &lt;55 | Harmful: &gt;85 | Extreme: &gt;120</p>
+        </div>
+
+        <div class="sim-card">
+          <h4>💨 Air Quality <span class="unit">AQI</span></h4>
+          <input type="range" min="0" max="300" value="78" id="simAir" class="slider air-slider" />
+          <div class="slider-val" id="simAirVal">78 AQI</div>
+          <p class="sim-hint">Good: &lt;50 | Moderate: 51–100 | Unhealthy: &gt;150</p>
+        </div>
+
+        <div class="sim-card">
+          <h4>🗑️ Waste Fill <span class="unit">%</span></h4>
+          <input type="range" min="0" max="100" value="87" id="simWaste" class="slider waste-slider" />
+          <div class="slider-val" id="simWasteVal">87%</div>
+          <p class="sim-hint">Safe: &lt;50% | Warning: 50–80% | Critical: &gt;80%</p>
+        </div>
+
+        <div class="sim-card">
+          <h4>💧 pH Level <span class="unit">pH</span></h4>
+          <input type="range" min="0" max="14" step="0.1" value="5.6" id="simWater" class="slider water-slider" />
+          <div class="slider-val" id="simWaterVal">5.6 pH</div>
+          <p class="sim-hint">Safe: 6.5–8.5 | Acidic: &lt;6.5 | Alkaline: &gt;8.5</p>
+        </div>
+
+      </div>
+      <button class="apply-btn" id="applySimBtn">⚡ Apply Simulation</button>
+      <button class="reset-btn" id="resetSimBtn">↩ Reset to Live</button>
+    </section>
+
+    <!-- ===== ALERTS TAB ===== -->
+    <section class="tab" id="tab-alerts">
+      <div class="section-header">
+        <h1>Alert <em>Log</em></h1>
+        <p class="subtitle">All triggered pollution events in this session</p>
+      </div>
+      <div id="alertList" class="alert-list">
+        <p class="empty-alerts">No alerts yet. Pollution detected events will appear here.</p>
+      </div>
+      <button class="reset-btn" id="clearAlertsBtn">🗑 Clear All Alerts</button>
+    </section>
+
+    <!-- ===== ABOUT TAB ===== -->
+    <section class="tab" id="tab-about">
+      <div class="section-header">
+        <h1>About <em>EcoVision</em></h1>
+        <p class="subtitle">AI-powered environmental monitoring for a cleaner world</p>
+      </div>
+      <div class="about-grid">
+        <div class="about-card">
+          <div class="about-icon">🔊</div>
+          <h4>Noise Detection</h4>
+          <p>Monitors decibel levels via microphone arrays placed at urban intersections. Triggers alerts above 85 dB sustained for over 10 seconds, protecting residents from noise-induced health effects.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-icon">💨</div>
+          <h4>Air Quality</h4>
+          <p>Tracks AQI using optical particle counters measuring PM2.5, PM10, CO₂, NO₂, and ozone concentrations. Data feeds WHO-standard thresholds with real-time alerts for industrial corridor zones.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-icon">🗑️</div>
+          <h4>Dump & Waste</h4>
+          <p>Ultrasonic fill-level sensors in landfill cells alert municipal teams when capacity exceeds 80%. Methane sniffers detect gas leaks early, reducing explosion risk and greenhouse emissions.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-icon">💧</div>
+          <h4>Water Quality</h4>
+          <p>pH probes, turbidity sensors, and dissolved oxygen meters deployed along river basins. Automated alerts when pH drifts outside the safe 6.5–8.5 range, indicating industrial runoff or acid rain.</p>
+        </div>
+        <div class="about-card full">
+          <div class="about-icon">🌍</div>
+          <h4>Our Mission</h4>
+          <p>EcoVision was founded on the belief that environmental data should be accessible, real-time, and actionable. By integrating IoT sensors, machine learning anomaly detection, and citizen reporting, we empower communities and governments to respond to pollution before it becomes irreversible. Every data point collected brings us one step closer to measurable, verifiable environmental justice.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>EcoVision © 2025 — Environmental Intelligence Platform</span>
+    <span id="clockDisplay">--:--:--</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
